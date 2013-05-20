@@ -10,6 +10,7 @@ Dowloading/Installing:
 - [arm - Raspberry Pi, etc](https://github.com/jrenner/linux-directory-help/raw/master/bin/dirhelp-linux-arm)
 - copy it somewhere in your PATH environment variable, I like to use ~/bin
 - rename it to something easy to type like "dirhelp"
+- MAKE SURE TO RUN "sudo chmod +x (filename)" so that the file is executable
 
 How to use:
 - run "dirhelp" in some typical directories like "/", "/media", "/var/log"
