@@ -7,17 +7,19 @@ import (
 	"regexp"
 )
 
-var INFO_SOURCE string = "Information source: http://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard"
+var (
+	INFO_SOURCE = "Information source: http://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard"
 
-var VERSION string = "1.0"
-var flagAllHelp = flag.Bool("a", false, "print info for all directories")
-var flagVersion = flag.Bool("v", false, "show version number")
-var flagPrintHelp = flag.Bool("h", false, "print usage info")
+	VERSION       = "1.0"
+	flagAllHelp   = flag.Bool("a", false, "print info for all directories")
+	flagVersion   = flag.Bool("v", false, "show version number")
+	flagPrintHelp = flag.Bool("h", false, "print usage info")
 
-// grabs a help string from that mess at the bottom of this file
-var testRE, _ = regexp.Compile("(/.*)\n(.*)")
+	// grabs a help string from that mess at the bottom of this file
+	testRE, _ = regexp.Compile("(/.*)\n(.*)")
 
-var CURRENT_PATH, _ = os.Getwd()
+	CURRENT_PATH, _ = os.Getwd()
+)
 
 func init() {
 	flag.Parse()
