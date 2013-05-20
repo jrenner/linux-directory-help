@@ -5,7 +5,7 @@ dirhelp - a command line tool to give information about the linux directory stru
 
 Dowloading/Installing:
 - grab the appropriate binary for your system from the [bin](/bin) directory
-- [https://github.com/jrenner/linux-directory-help/raw/master/bin/dirhelp-linux-amd64](amd64 - 64 bit)
+- [amd64](https://github.com/jrenner/linux-directory-help/raw/master/bin/dirhelp-linux-amd64)
 - [https://github.com/jrenner/linux-directory-help/raw/master/bin/dirhelp-linux-386](386 - 32 bit)
 - [https://github.com/jrenner/linux-directory-help/raw/master/bin/dirhelp-linux-arm](arm - Raspberry Pi, etc)
 - copy it somewhere in your PATH environment variable, I like to use ~/bin
