@@ -6,6 +6,7 @@ dirhelp - a command line tool to give information about the linux directory stru
 Dowloading/Installing:
 - grab the appropriate binary for your system from the bin directory
 - copy it somewhere in your PATH environment variable, I like to use ~/bin
+- make sure you rename it to something easy to type like "dirhelp"
 
 How to use:
 - run "dirhelp" in some typical directories like "/", "/media", "/var/log"
