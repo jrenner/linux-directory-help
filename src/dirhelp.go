@@ -28,11 +28,18 @@ func init() {
 	flag.Parse()
 	var err error
 	CURRENT_DIR, err = os.Getwd()
-	handleError(err)
-
+	handleFatalError(err)
+	// need this to find out if user is looking up his home dir
 	currentUser, err := user.Current()
-	handleError(err)
+	handleFatalError(err)
 	USER_HOME_DIR = currentUser.HomeDir
+}
+
+func handleFatalError(err error) {
+	if (err != nil) {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
 }
 
 func printUsage() {
@@ -63,18 +70,25 @@ func formatLookupDir(lookupDir *string) {
 	*lookupDir = tempDir
 }
 
-func handleError(err error) {
-	if (err != nil) {
-		fmt.Println("ERROR: ", err)
-		os.Exit(1)
+func isDir(pth string) (bool, error) {
+	fi, err := os.Stat(pth)
+	if err != nil {
+		return false, err
 	}
+	return fi.Mode().IsDir(), nil
 }
 
 func isADirectory(path string) bool {
 	f, err := os.Open(path)
-	handleError(err)
+	if (err != nil) {
+		fmt.Println("ERROR: " + err.Error())
+		return false
+	}
 	stat, err := f.Stat()
-	handleError(err)
+	if (err != nil) {
+		fmt.Println("ERROR: " + err.Error())
+		return false;
+	}
 	return stat.IsDir()
 }
 
@@ -84,14 +98,15 @@ func printDirInfo(lookupDirList []string) {
 	results := testRE.FindAllStringSubmatch(string(dirinfo.FHS_INFO), -1)
 	infoToPrint := ""
 	for _, lookupDir := range lookupDirList {
-		if !isADirectory(lookupDir) {
+		isDir, err := isDir(lookupDir)
+		handleFatalError(err)
+		if !isDir {
 			continue
 		}
 		foundInfo = false
-		if lookupDir == USER_HOME_DIR {
-			infoToPrint += fmt.Sprintf("[%v] %v\n", lookupDir, dirinfo.HOME_DIR_INFO)
+		if lookupDir == USER_HOME_DIR || *flagAllHelp {
+			infoToPrint += fmt.Sprintf("[%v] %v\n", USER_HOME_DIR, dirinfo.HOME_DIR_INFO)
 			foundInfo = true;
-			continue
 		}
 		formatLookupDir(&lookupDir)
 		for _, regexResult := range results {
