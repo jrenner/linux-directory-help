@@ -4,16 +4,18 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"os/user"
 	"regexp"
 	"dirinfo"
 	"strings"
 )
 
 var (
-	CURRENT_DIR = ""
+	USER_HOME_DIR string
+	CURRENT_DIR string
 	INFO_SOURCES = "Information sources:\n" +
-		"\thttp://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard\n" +
-		"\tcontents of 'man hier'"
+		"    http://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard\n" +
+		"    contents of 'man hier'"
 	VERSION       = "1.1"
 	flagAllHelp   = flag.Bool("a", false, "print info for all directories")
 	flagVersion   = flag.Bool("v", false, "show version number")
@@ -26,61 +28,89 @@ func init() {
 	flag.Parse()
 	var err error
 	CURRENT_DIR, err = os.Getwd()
-	if (err != nil) {
-		fmt.Printf("ERROR: %v\n", err)
-		os.Exit(1)
-	}
+	handleError(err)
+
+	currentUser, err := user.Current()
+	handleError(err)
+	USER_HOME_DIR = currentUser.HomeDir
 }
 
 func printUsage() {
 	fmt.Println("Usage of dirhelp:")
-	fmt.Println("\t'dirhelp -a' print info for every directory")
-	fmt.Println("\t'dirhelp -v' show version, URL and author info")
-	fmt.Println("\t'dirhelp -h' show this help")
-	fmt.Println("\t'dirhelp *' ")
+	fmt.Println("    dirhelp          get info on current working directory")
+	fmt.Println("    dirhelp <dir>    get info on directory - can be multiple dirs or wildcards")
+	fmt.Println("    dirhelp -a       print info for every directory")
+	fmt.Println("    dirhelp -v       show version, URL and author info")
+	fmt.Println("    dirhelp -h       show this help")
 }
 
-func formatLookupDir(lookupDir string) {
-	if lookupDir == "/" {
+func formatLookupDir(lookupDir *string) {
+	tempDir := *lookupDir
+	if tempDir == "/" {
 		return
 	}
 	// need to have the path begin with a slash for the regex
-	if lookupDir[0] != '/' {
-		lookupDir = "/" + lookupDir
+	if tempDir[0] != '/' {
+		tempDir = "/" + tempDir
 	}
 	// remove a last slash if there is one
-	if lookupDir[len(lookupDir)-1] == '/' {
-		lookupDir = lookupDir[:len(lookupDir)-1]
+	if tempDir[len(tempDir)-1] == '/' {
+		tempDir = tempDir[:len(tempDir)-1]
 	}
-	for strings.Contains(lookupDir, "//") {
-		fmt.Println(lookupDir)
-		lookupDir = strings.Replace(lookupDir, "//", "/", -1);
-		fmt.Println("post: " + lookupDir)
+	for strings.Contains(tempDir, "//") {
+		tempDir = strings.Replace(tempDir, "//", "/", -1);
+	}
+	*lookupDir = tempDir
+}
+
+func handleError(err error) {
+	if (err != nil) {
+		fmt.Println("ERROR: ", err)
+		os.Exit(1)
 	}
 }
 
+func isADirectory(path string) bool {
+	f, err := os.Open(path)
+	handleError(err)
+	stat, err := f.Stat()
+	handleError(err)
+	return stat.IsDir()
+}
+
 func printDirInfo(lookupDirList []string) {
-	var foundInfoCount uint8 = 0
 	var foundInfo bool = false;
+	didNotFind := make([]string, 0)
 	results := testRE.FindAllStringSubmatch(string(dirinfo.FHS_INFO), -1)
 	infoToPrint := ""
 	for _, lookupDir := range lookupDirList {
+		if !isADirectory(lookupDir) {
+			continue
+		}
 		foundInfo = false
-		formatLookupDir(lookupDir)
+		if lookupDir == USER_HOME_DIR {
+			infoToPrint += fmt.Sprintf("[%v] %v\n", lookupDir, dirinfo.HOME_DIR_INFO)
+			foundInfo = true;
+			continue
+		}
+		formatLookupDir(&lookupDir)
 		for _, regexResult := range results {
 			dir := regexResult[1]
 			help := regexResult[2]
 			if  dir == lookupDir || *flagAllHelp {
 				infoToPrint += fmt.Sprintf("[%v] %v\n", dir, help)
 				foundInfo = true
-				foundInfoCount++
 			}
 		}
 		if (!foundInfo) {
-			fmt.Printf("Did not find information for directory: '%s'\n", lookupDir)
+			didNotFind = append(didNotFind, lookupDir)
 		}
 	}
-	if foundInfoCount == 0 {
+	if (len(didNotFind) > 0) {
+		fmt.Println("Did not find information for the following directories:")
+		for _, dir := range didNotFind {
+			fmt.Println(dir)
+		}
 		printUsage()
 	} else {
 		fmt.Print(infoToPrint)
