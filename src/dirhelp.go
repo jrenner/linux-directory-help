@@ -17,7 +17,7 @@ var (
 	INFO_SOURCES = "Information sources:\n" +
 		"    http://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard\n" +
 		"    contents of 'man hier'"
-	VERSION       = "1.1b"
+	VERSION       = "1.2"
 	flagAllHelp   = flag.Bool("a", false, "print info for all directories")
 	flagVersion   = flag.Bool("v", false, "show version number")
 	flagPrintHelp = flag.Bool("h", false, "print usage info")
@@ -136,9 +136,8 @@ func printDirInfo(lookupDirList []string) {
 			fmt.Println(dir)
 		}
 		printUsage()
-	} else {
-		fmt.Print(infoToPrint)
 	}
+	fmt.Print(infoToPrint)
 }
 
 func main() {
