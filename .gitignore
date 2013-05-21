@@ -20,3 +20,11 @@ _cgo_export.*
 _testmain.go
 
 *.exe
+
+# IDEA stuff
+.idea
+out
+*.iml
+
+# My custom develepment Makefile
+Makefile
