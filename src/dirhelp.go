@@ -8,6 +8,7 @@ import (
 	"regexp"
 	"dirinfo"
 	"strings"
+	"runtime"
 )
 
 var (
@@ -16,7 +17,7 @@ var (
 	INFO_SOURCES = "Information sources:\n" +
 		"    http://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard\n" +
 		"    contents of 'man hier'"
-	VERSION       = "1.1"
+	VERSION       = "1.1b"
 	flagAllHelp   = flag.Bool("a", false, "print info for all directories")
 	flagVersion   = flag.Bool("v", false, "show version number")
 	flagPrintHelp = flag.Bool("h", false, "print usage info")
@@ -29,10 +30,18 @@ func init() {
 	var err error
 	CURRENT_DIR, err = os.Getwd()
 	handleFatalError(err)
-	// need this to find out if user is looking up his home dir
-	currentUser, err := user.Current()
-	handleFatalError(err)
-	USER_HOME_DIR = currentUser.HomeDir
+
+	// because of cross-compiling disabling cgo, this feature is not available
+	// a solution is to compile on the respective platforms
+	// a bit of a pain for such a small feature, though
+	if (runtime.GOARCH == "amd64") {
+		currentUser, err := user.Current()
+		handleFatalError(err)
+		USER_HOME_DIR = currentUser.HomeDir
+	} else {
+		// I hope there isn't a user called DISABLED_DUE_TO_CROSSCOMPILE_WOES!
+		USER_HOME_DIR = "DISABLED_DUE_TO_CROSSCOMPILE_WOES"
+	}
 }
 
 func handleFatalError(err error) {
@@ -144,8 +153,9 @@ func main() {
 	}
 	lookupDirList := flag.Args()
 	for i, dir := range lookupDirList {
-		lookupDirList[i] = CURRENT_DIR + "/" + dir
-
+		if (lookupDirList[i][0] != '/') {
+			lookupDirList[i] = CURRENT_DIR + "/" + dir
+		}
 	}
 	if len(lookupDirList) == 0 {
 		lookupDirList = append(lookupDirList, CURRENT_DIR)
