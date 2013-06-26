@@ -32,4 +32,17 @@ jrenner@main:/var/log$ dirhelp /usr/share
 [/usr/share] Architecture-independent (shared) data. This directory contains subdirectories with specific application data, that can be shared among different architectures of the same OS.  Often one finds stuff here  that  used  to live in /usr/doc or /usr/lib or /usr/man.
 jrenner@main:/var/log$ dirhelp /usr/local
 [/usr/local] Tertiary hierarchy for local data, specific to this host. Typically has further subdirectories, e.g., bin/, lib/, share/.
+jrenner@main:/var/log$ cd /usr
+jrenner@main:/usr$ dirhelp *
+'/usr/games' - no information found
+'/usr/lib32' - no information found
+[/usr/bin] Non-essential command binaries (not needed in single user mode); for all users.
+[/usr/include] Standard include files for the C compiler.
+[/usr/lib] Libraries for the binaries in /usr/bin/ and /usr/sbin/.
+[/usr/local] Tertiary hierarchy for local data, specific to this host. Typically has further subdirectories, e.g., bin/, lib/, share/.
+[/usr/sbin] Non-essential system binaries, e.g., daemons for various network-services.
+[/usr/share] Architecture-independent (shared) data. This directory contains subdirectories with specific application data, that can be shared among different architectures of the same OS.  Often one finds stuff here  that  used  to live in /usr/doc or /usr/lib or /usr/man.
+[/usr/src] Source code, e.g., the kernel source code with its header files.
+[/usr/X11R6] X Window System, Version 11, Release 6.
+
 ```
