@@ -94,7 +94,7 @@ func lookupDirInfo(lookupDir string) string {
 		info = fmt.Sprintf("[%s] %s\n", USER_HOME_DIR, dirinfo.HOME_DIR_INFO)
 	} else {
 		result := dirinfo.Directories[lookupDir]
-		if (result != "") {
+		if result != "" {
 			info = fmt.Sprintf("[%s] %s\n", lookupDir, result)
 		}
 	}
@@ -112,7 +112,7 @@ func printDirInfo(lookupDirList []string) {
 			continue
 		}
 		info := lookupDirInfo(lookupDir)
-		if (info != "") {
+		if info != "" {
 			foundAtLeastOne = true
 			infoToPrint += info
 		} else {
@@ -146,7 +146,7 @@ func main() {
 			allInfo += fmt.Sprintf("[%s] %s\n", dir, info)
 		}
 		fmt.Print(allInfo)
-	    os.Exit(0)
+		os.Exit(0)
 	}
 	lookupDirList := flag.Args()
 	for i, dir := range lookupDirList {

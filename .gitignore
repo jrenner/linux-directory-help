@@ -28,3 +28,6 @@ out
 
 # My custom develepment Makefile
 Makefile
+
+# Other whatnots and jibjabs
+build.sh

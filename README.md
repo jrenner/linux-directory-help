@@ -20,4 +20,16 @@ dirhelp - a command line tool to give information about the linux directory stru
 - run "dirhelp -a" to see all the help strings
 
 ### Example Session
-![Alt text](http://github.com/jrenner/linux-directory-help/raw/master/dirhelp.png "screenshot")
+```
+jrenner@main:/$ dirhelp
+[/] Primary hierarchy root and root directory of the entire file system hierarchy.
+jrenner@main:/$ dirhelp opt
+[/opt] Optional application software packages.
+jrenner@main:/$ cd /var/log
+jrenner@main:/var/log$ dirhelp
+[/var/log] Log files. Various logs.
+jrenner@main:/var/log$ dirhelp /usr/share
+[/usr/share] Architecture-independent (shared) data. This directory contains subdirectories with specific application data, that can be shared among different architectures of the same OS.  Often one finds stuff here  that  used  to live in /usr/doc or /usr/lib or /usr/man.
+jrenner@main:/var/log$ dirhelp /usr/local
+[/usr/local] Tertiary hierarchy for local data, specific to this host. Typically has further subdirectories, e.g., bin/, lib/, share/.
+```
