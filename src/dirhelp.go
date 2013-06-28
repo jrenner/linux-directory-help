@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"os"
 	"os/user"
-	"regexp"
 	"runtime"
 	"strings"
 )
@@ -17,12 +16,10 @@ var (
 	INFO_SOURCES  = "Information sources:\n" +
 		"    http://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard\n" +
 		"    contents of 'man hier'"
-	VERSION       = "1.3"
+	VERSION       = "1.4"
 	flagAllHelp   = flag.Bool("a", false, "print info for all directories")
 	flagVersion   = flag.Bool("v", false, "show version number")
 	flagPrintHelp = flag.Bool("h", false, "print usage info")
-	// grabs a help string from that mess at the bottom of this file
-	testRE, _ = regexp.Compile("(/.*)\n(.*)")
 )
 
 func init() {
@@ -150,7 +147,7 @@ func main() {
 	}
 	lookupDirList := flag.Args()
 	for i, dir := range lookupDirList {
-		if lookupDirList[i][0] != '/' {
+		if CURRENT_DIR[0] != '/' {
 			lookupDirList[i] = CURRENT_DIR + "/" + dir
 		}
 	}
