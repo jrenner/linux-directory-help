@@ -16,7 +16,7 @@ var (
 	INFO_SOURCES  = "Information sources:\n" +
 		"    http://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard\n" +
 		"    contents of 'man hier'"
-	VERSION       = "1.4"
+	VERSION       = "1.41"
 	flagAllHelp   = flag.Bool("a", false, "print info for all directories")
 	flagVersion   = flag.Bool("v", false, "show version number")
 	flagPrintHelp = flag.Bool("h", false, "print usage info")
@@ -118,7 +118,7 @@ func printDirInfo(lookupDirList []string) {
 	}
 	if len(didNotFind) > 0 {
 		for _, dir := range didNotFind {
-			fmt.Printf("'%s' - no information found\n", dir)
+			fmt.Printf("[%s] no information found\n", dir)
 		}
 	}
 	if !foundAtLeastOne {
