@@ -30,4 +30,5 @@ out
 Makefile
 
 # Other whatnots and jibjabs
-build.sh
+src/build.sh
+bin/replace.sh

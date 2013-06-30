@@ -16,7 +16,7 @@ var (
 	INFO_SOURCES  = "Information sources:\n" +
 		"    http://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard\n" +
 		"    contents of 'man hier'"
-	VERSION       = "1.41"
+	VERSION       = "1.5"
 	flagAllHelp   = flag.Bool("a", false, "print info for all directories")
 	flagVersion   = flag.Bool("v", false, "show version number")
 	flagPrintHelp = flag.Bool("h", false, "print usage info")
@@ -64,7 +64,14 @@ func formatLookupDir(lookupDir *string) {
 	}
 	// need to have the path begin with a slash for the regex
 	if tempDir[0] != '/' {
-		tempDir = "/" + tempDir
+		cwd, _ := os.Getwd()
+		var separator string
+		if cwd == "/" {
+			separator = ""
+		} else {
+			separator = "/"
+		}
+		tempDir = cwd + separator + tempDir
 	}
 	// remove a last slash if there is one
 	if tempDir[len(tempDir)-1] == '/' {
@@ -92,10 +99,21 @@ func lookupDirInfo(lookupDir string) string {
 	} else {
 		result := dirinfo.Directories[lookupDir]
 		if result != "" {
-			info = fmt.Sprintf("[%s] %s\n", lookupDir, result)
+			dirText := fmt.Sprintf("[%s]", lookupDir)
+			dirText = spaceAligned(dirText)
+			info = fmt.Sprintf("%s%s\n", dirText, result)
 		}
 	}
 	return info
+}
+
+func spaceAligned(text string) string {
+	alignTo := 12
+	spaces := " "
+	for i := len(text); i < alignTo; i++ {
+		spaces += " "
+	}
+	return text + spaces
 }
 
 func printDirInfo(lookupDirList []string) {
@@ -118,7 +136,10 @@ func printDirInfo(lookupDirList []string) {
 	}
 	if len(didNotFind) > 0 {
 		for _, dir := range didNotFind {
-			fmt.Printf("[%s] no information found\n", dir)
+			// align all output text using variable amount of spaces
+			dirText := fmt.Sprintf("[%s]", dir)
+			dirText = spaceAligned(dirText)
+			fmt.Printf("%sno information found\n", dirText)
 		}
 	}
 	if !foundAtLeastOne {
