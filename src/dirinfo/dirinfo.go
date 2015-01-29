@@ -21,6 +21,7 @@ var Directories = map[string] string {
 	"/etc/xml" : "Configuration files for XML.",
 	"/home" : "Users' home directories, containing saved files, personal settings, etc.",
 	"/lib" : "Libraries essential for the binaries in /bin/ and /sbin/. This directory should hold those shared libraries that are necessary to boot the system and to run the commands in the root file system.",
+    "/lost+found" : "This is where files are placed (usually by fsck) when there has been some corruption and there has been a recovery attempt. Such as file names being deleted or due to incosistent system state or bugs.
 	"/media" : "Mount points for removable media such as CD-ROMs and USB sticks.",
 	"/mnt" : "Temporarily mounted filesystems.",
 	"/opt" : "Optional application software packages.",
